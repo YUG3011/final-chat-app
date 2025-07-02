@@ -62,96 +62,94 @@ export const Register = () => {
   };
 
   return (
-    <>
-      <div className="flex flex-col justify-center items-center min-h-screen px-4">
-        <div
-          id="abcs"
-          className="w-full sm:w-[80%] md:w-[60%] lg:w-[45%] xl:w-[35%] h-auto bg-black text-white rounded-4xl border-4 opacity-75 font-bold font-serif flex flex-col justify-center items-center py-10"
-        >
-          <label id="font-style" className="p-5 text-2xl">
-            REGISTER
-          </label>
+  <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-[#2e2e2e] via-[#121212] to-[#1a1a1a] px-4 ">
+    <div className="w-full max-w-md bg-white/10 backdrop-blur-lg border border-white/20 rounded-3xl shadow-2xl px-6 py-6">
 
-          <form
-            onSubmit={handleSubmit}
-            className="flex flex-col justify-center items-center w-full px-4"
+      <h2 className="text-3xl font-bold text-white text-center mb-6">Register</h2>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <input
+          required
+          id="fullname"
+          type="text"
+          onChange={handleInput}
+          placeholder="Full Name"
+          className="w-full px-4 py-3 rounded-xl bg-white/20 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#81ffa9] transition"
+        />
+        <input
+          required
+          id="username"
+          type="text"
+          onChange={handleInput}
+          placeholder="Username"
+          className="w-full px-4 py-3 rounded-xl bg-white/20 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#81ffa9] transition"
+        />
+        <input
+          required
+          id="email"
+          type="email"
+          onChange={handleInput}
+          placeholder="Email"
+          className="w-full px-4 py-3 rounded-xl bg-white/20 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#81ffa9] transition"
+        />
+        <input
+          required
+          id="password"
+          type="password"
+          onChange={handleInput}
+          placeholder="Password"
+          className="w-full px-4 py-3 rounded-xl bg-white/20 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#81ffa9] transition"
+        />
+        <input
+          required
+          id="confirmpassword"
+          type="password"
+          onChange={handleInput}
+          placeholder="Confirm Password"
+          className="w-full px-4 py-3 rounded-xl bg-white/20 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#81ffa9] transition"
+        />
+
+        {/* Gender selection toggle-style */}
+        <div className="flex items-center justify-center gap-4 mt-3">
+          <button
+            type="button"
+            onClick={() => selectGender("male")}
+            className={`px-5 py-2 rounded-full border ${
+              inputData.gender === "male"
+                ? "bg-[#81ffa9] text-black border-transparent"
+                : "bg-white/10 text-white border-white/30"
+            } transition`}
           >
-            <input
-              required
-              id="fullname"
-              type="text"
-              onChange={handleInput}
-              placeholder="ENTER FULLNAME"
-              className="w-full max-w-[400px] h-[50px] px-4 py-3 rounded-full border-2 border-white-500 focus:outline-none mb-6 placeholder-black"
-            />
-            <input
-              required
-              id="username"
-              type="text"
-              onChange={handleInput}
-              placeholder="ENTER USERNAME"
-              className="w-full max-w-[400px] h-[50px] px-4 py-3 rounded-3xl border-2 border-white-500 focus:outline-none mb-6 placeholder-black"
-            />
-            <input
-              required
-              id="email"
-              type="email"
-              onChange={handleInput}
-              placeholder="ENTER EMAIL"
-              className="w-full max-w-[400px] h-[50px] px-4 py-3 rounded-3xl border-2 border-white-500 focus:outline-none mb-6 text-white placeholder-black"
-            />
-            <input
-              required
-              id="password"
-              type="password"
-              onChange={handleInput}
-              placeholder="ENTER PASSWORD"
-              className="w-full max-w-[400px] h-[50px] px-4 py-3 rounded-3xl border-2 border-white-500 focus:outline-none mb-6 placeholder-black"
-            />
-            <input
-              required
-              id="confirmpassword"
-              type="password"
-              onChange={handleInput}
-              placeholder="ENTER CONFIRM PASSWORD"
-              className="w-full max-w-[400px] h-[50px] px-4 py-3 rounded-3xl border-2 border-white-500 focus:outline-none mb-4 placeholder-black"
-            />
-
-            <div id="gender" className="mt-3 mb-4">
-              <label className="cursor-pointer label flex gap-4 text-sm text-gray-200">
-                <input
-                  onChange={() => selectGender("male")}
-                  checked={inputData.gender === "male"}
-                  type="checkbox"
-                  className="checkbox"
-                />
-                MALE
-                <input
-                  onChange={() => selectGender("female")}
-                  checked={inputData.gender === "female"}
-                  type="checkbox"
-                  className="checkbox"
-                />
-                FEMALE
-              </label>
-            </div>
-
-            <button
-              type="submit"
-              className="bg-black rounded-[20px] w-[100px] h-[40px] text-white hover:bg-[#81ffa9] hover:text-black mt-4 border border-black"
-            >
-              {loading ? "loading..." : "Register"}
-            </button>
-          </form>
-
-          <div className="text-center mt-5">
-            <label className="text-black">Already have an account?</label>
-            <Link to={"/login"}>
-              <h6 className="text-blue-950 cursor-pointer text-sm">login</h6>
-            </Link>
-          </div>
+            Male
+          </button>
+          <button
+            type="button"
+            onClick={() => selectGender("female")}
+            className={`px-5 py-2 rounded-full border ${
+              inputData.gender === "female"
+                ? "bg-[#81ffa9] text-black border-transparent"
+                : "bg-white/10 text-white border-white/30"
+            } transition`}
+          >
+            Female
+          </button>
         </div>
+
+        <button
+          type="submit"
+          className="w-full py-3 bg-[#81ffa9] text-black font-semibold rounded-xl hover:bg-white hover:text-black transition"
+        >
+          {loading ? "Registering..." : "Register"}
+        </button>
+      </form>
+
+      <div className="text-center mt-6 text-white text-sm">
+        <p>Already have an account?</p>
+        <Link to={"/login"} className="text-[#81ffa9] hover:underline">
+          Login here
+        </Link>
       </div>
-    </>
-  );
+    </div>
+  </div>
+);
+
 };

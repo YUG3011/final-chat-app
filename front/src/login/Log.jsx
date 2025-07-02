@@ -1,13 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import axios from "axios";
-import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useAuth } from "../context/AuthContext";
 
 export const Log = () => {
   const { setauthUser } = useAuth();
-
   const navigate = useNavigate();
   const [userInput, setuserInput] = useState({});
   const [loading, setLoading] = useState(false);
@@ -35,7 +33,7 @@ export const Log = () => {
         return;
       }
 
-      toast.success(data.message || "login success");
+      toast.success(data.message || "Login successful");
       localStorage.setItem("chatapp", JSON.stringify(data));
       setauthUser(data);
       setLoading(false);
@@ -44,61 +42,51 @@ export const Log = () => {
       setLoading(false);
       toast.error(
         error?.response?.data?.message ||
-          "please enter valid email or password"
+          "Please enter valid email or password"
       );
     }
   };
 
   return (
-    <>
-      <div className="flex flex-col justify-center items-center min-h-screen px-4">
-        <div
-          id="abcs"
-          className="w-full sm:w-[80%] md:w-[60%] lg:w-[40%] h-auto bg-black text-white rounded-4xl border-4 opacity-75 font-bold font-serif flex flex-col justify-center items-center py-10"
-        >
-          <label id="font-style" className="p-5 text-2xl">
-            Login
-          </label>
-          <form
-            onSubmit={handleSubmit}
-            className="flex flex-col justify-center items-center w-full px-4"
-          >
-            <input
-              required
-              id="email"
-              type="email"
-              onChange={handleInput}
-              placeholder="ENTER EMAIL"
-              className="w-full max-w-[400px] h-[50px] mb-6 px-6 py-3 rounded-3xl border-2 border-white focus:outline-none text-white placeholder-black"
-            />
-            <input
-              required
-              id="password"
-              type="password"
-              onChange={handleInput}
-              placeholder="ENTER PASSWORD"
-              className="w-full max-w-[400px] h-[50px] px-6 py-3 rounded-3xl border-2 border-white focus:outline-none mb-6 placeholder-black"
-            />
-            <div className="inline-flex items-center text-black mb-4">
-              <input type="checkbox" className="m-2" /> I AM 18 YEARS OLD
-            </div>
-
-            <button
-              type="submit"
-              className="bg-black rounded-[20px] w-[100px] h-[40px] text-white hover:bg-[#81ffa9] hover:text-black mt-[10px] border border-black"
-            >
-              {loading ? "loading..." : "Login"}
-            </button>
-          </form>
-
-          <div className="text-center mt-5">
-            <label className="text-black">Don't have an account?</label>
-            <Link to={"/register"}>
-              <h6 className="text-blue-950 cursor-pointer text-sm">Register</h6>
-            </Link>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-[#1f1c2c] to-[#928dab] px-4">
+      <div className="w-full max-w-md bg-white/10 backdrop-blur-lg border border-white/30 rounded-3xl shadow-xl p-8">
+        <h2 className="text-3xl font-semibold text-white text-center mb-6">Login</h2>
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <input
+            required
+            id="email"
+            type="email"
+            onChange={handleInput}
+            placeholder="Email"
+            className="w-full px-4 py-3 rounded-xl bg-white/20 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#81ffa9] transition"
+          />
+          <input
+            required
+            id="password"
+            type="password"
+            onChange={handleInput}
+            placeholder="Password"
+            className="w-full px-4 py-3 rounded-xl bg-white/20 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-[#81ffa9] transition"
+          />
+          <div className="flex items-center text-white text-sm">
+            <input type="checkbox" id="age" className="mr-2" />
+            <label htmlFor="age">I am 18 years old</label>
           </div>
+          <button
+            type="submit"
+            className="w-full py-3 bg-[#81ffa9] text-black rounded-xl hover:bg-white hover:text-black transition font-semibold"
+          >
+            {loading ? "Loading..." : "Login"}
+          </button>
+        </form>
+
+        <div className="text-center mt-6 text-white text-sm">
+          <p>Don't have an account?</p>
+          <Link to={"/register"} className="text-[#81ffa9] hover:underline">
+            Register here
+          </Link>
         </div>
       </div>
-    </>
+    </div>
   );
 };

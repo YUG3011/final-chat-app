@@ -8,9 +8,15 @@ import userConvorsation from "../../Zustand/useConvorsation";
 import { useAuth } from "../../context/AuthContext";
 import notify from "../../assets/sound/new-message-2-125765.mp3";
 import { usesocketContext } from "../../context/SocketContext";
+import { CiMenuKebab } from "react-icons/ci";
 
 export const MessageContainer = () => {
-  const { messages = [], selectedConversation, setMessage } = userConvorsation();
+  let lastShownDate = null;
+  const {
+    messages = [],
+    selectedConversation,
+    setMessage,
+  } = userConvorsation();
   const { authUser } = useAuth();
   const navigate = useNavigate();
   const { Socket } = usesocketContext();
@@ -19,7 +25,6 @@ export const MessageContainer = () => {
   const [sendData, setSendData] = useState("");
   const lastMessageRef = useRef(null);
 
-  // Real-time listener
   useEffect(() => {
     if (!Socket) return;
 
@@ -67,7 +72,6 @@ export const MessageContainer = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!sendData.trim()) return;
 
     try {
@@ -94,90 +98,113 @@ export const MessageContainer = () => {
   return (
     <>
       {!selectedConversation ? (
-        <div className="flex justify-center items-center m-auto h-[585px] bg-black">
-          <div className="text-white">
-            <p>
-              👋WELCOME <b>"{authUser.username}"</b>👋
-            </p>
-            <p>FIND FRIEND AND START CHAT 📄📄</p>
+        <div className="flex justify-center items-center h-full bg-white rounded-lg">
+          <div className="text-gray-500 text-lg font-medium">
+            Search Your Friends And Start Chat
           </div>
         </div>
       ) : (
-        <div className="flex flex-col h-screen max-h-screen">
+        <div className="flex flex-col h-full rounded-lg bg-gray-100 overflow-hidden">
           {/* Header */}
-          <div className="bg-white text-white text-center border-4 border-black flex rounded-2xl items-center h-[60px]">
-            <div className="ml-2 flex items-center">
-              <VscAccount
+          <div className="flex items-center justify-between p-2.5 bg-white border-b">
+            <div className="flex items-center gap-3">
+              <button
                 onClick={() => navigate(`/profile/${authUser?._id}`)}
-                className="h-10 w-10 hover:scale-110 rounded-full border-2 border-black hover:bg-green-900 cursor-pointer bg-black mr-3"
-              />
-              <span className="text-black">
+                className="bg-gray-200 p-2 rounded-full hover:scale-105 transition"
+              >
+                <VscAccount className="h-6 w-6 text-gray-800" />
+              </button>
+              <h2 className="font-semibold text-lg text-gray-800">
                 {selectedConversation?.username}
-              </span>
+              </h2>
             </div>
+            <button className="text-black hover:text-gray-800">
+              <CiMenuKebab size={25} />
+            </button>
           </div>
 
-          {/* Message list */}
-          <div className="flex-1 overflow-y-auto px-2">
+          {/* Message List */}
+          <div className="flex-1 overflow-y-auto p-4 space-y-3">
             {loading && (
-              <div className="flex w-full h-full flex-col items-center justify-center gap-4 bg-transparent">
-                <div className="loading loading-spinner"></div>
+              <div className="flex items-center justify-center h-full">
+                <div className="loading loading-spinner text-blue-500" />
               </div>
             )}
 
             {!loading && messages.length === 0 && (
-              <div className="flex justify-center items-center m-auto border-2 border-white bg-black">
-                <span className="text-white">SEND MESSAGE TO START CONVERSATION </span>
-                <LuMessageCircle size={40} className=" text-white" />
-                <LuMessageCircle size={40} className=" text-white" />
+              <div className="flex justify-center items-center text-gray-500">
+                SEND MESSAGE TO START CONVERSATION
+                <LuMessageCircle size={40} className="ml-2 text-blue-400" />
               </div>
             )}
 
             {!loading &&
-              messages.map((message, index) => (
-                <div key={message._id} ref={index === messages.length - 1 ? lastMessageRef : null}>
-                  <div
-                    className={`chat ${
-                      message.senderId === authUser._id ? "chat-end" : "chat-start"
-                    }`}
-                  >
-                    <div className="text-[10px] opacity-70 text-white font-bold">
-                      {new Date(message?.createdAt).toLocaleDateString("en-IN")}
-                    </div>
+              messages.map((message, index) => {
+                const isSender = message.senderId === authUser._id;
+                const messageDate = new Date(message.createdAt).toDateString();
+                const showDate = messageDate !== lastShownDate;
+                lastShownDate = messageDate;
+
+                return (
+                  <div key={message._id}>
+                    {showDate && (
+                      <div className="text-center text-gray-500 text-sm my-2">
+                        {messageDate}
+                      </div>
+                    )}
+
                     <div
-                      className={`relative p-3 rounded-lg max-w-[40%] mt-2 ${
-                        message.senderId === authUser._id
-                          ? "bg-blue-600 text-white ml-auto mr-2 before:content-[''] before:absolute before:bottom-0 before:right-[-8px] before:border-[10px] before:border-transparent before:border-t-green-700 before:border-b-0 before:border-l-0 before:mb-[-10px]"
-                          : "bg-green-700 text-black ml-2 before:content-[''] before:absolute before:bottom-0 before:left-[-8px] before:border-[10px] before:border-transparent before:border-t-blue-600 before:border-b-0 before:border-r-0 before:mb-[-10px]"
+                      ref={
+                        index === messages.length - 1 ? lastMessageRef : null
+                      }
+                      className={`flex items-end ${
+                        isSender ? "justify-end" : "justify-start"
                       }`}
                     >
-                      {message?.message}
-                      <div className="flex justify-end text-[10px] text-black">
-                        <b>
-                          {new Date(message?.createdAt).toLocaleTimeString("en-IN", {
-                            hour: "numeric",
-                            minute: "numeric",
-                          })}
-                        </b>
+                      <div
+                        className={`rounded-2xl px-4 py-2 text-sm max-w-xs shadow ${
+                          isSender
+                            ? "bg-green-200 text-green-900 ml-auto"
+                            : "bg-gray-700 text-white mr-auto border"
+                        }`}
+                      >
+                        {message.message}
+                        <div
+                          className={`text-[10px] text-right mt-1 opacity-60 ${
+                            isSender ? "text-green-700"
+                            : "text-gray-400"
+                          }`}
+                        >
+                          {new Date(message.createdAt).toLocaleTimeString(
+                            "en-IN",
+                            {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            }
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
           </div>
 
-          {/* Bottom input bar */}
-          <form onSubmit={handleSubmit}>
-            <div className="w-full bg-white text-center py-2 items-start flex pl-2 border-black border-l-4 border-r-4 border-b-6">
+          {/* Input Bar */}
+          <form onSubmit={handleSubmit} className="p-3 bg-white border-t">
+            <div className="flex items-center gap-2">
               <input
                 value={sendData}
                 onChange={(e) => setSendData(e.target.value)}
                 type="text"
-                placeholder="Type a Message"
-                className="border-4 border-black text-black rounded-full p-2.5 w-[90%]"
+                placeholder="Enter a message..."
+                className="flex-1 border rounded-full px-4 py-2 text-sm"
               />
-              <button type="submit">
-                <BiSend className="h-12 w-12 hover:scale-110 rounded-full border-8 border-black hover:bg-blue-900 cursor-pointer bg-black ml-1 text-white" />
+              <button
+                type="submit"
+                className="bg-blue-500 text-white p-2 rounded-full hover:bg-blue-600"
+              >
+                <BiSend className="h-5 w-5" />
               </button>
             </div>
           </form>
