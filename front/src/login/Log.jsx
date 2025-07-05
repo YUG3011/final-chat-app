@@ -85,6 +85,9 @@ export const Log = () => {
           <Link to={"/register"} className="text-[#81ffa9] hover:underline">
             Register here
           </Link>
+          <div>
+            
+          </div>
         </div>
       </div>
     </div>

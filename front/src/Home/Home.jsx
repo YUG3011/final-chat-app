@@ -13,8 +13,8 @@ export const Home = () => {
   const handleLogout = async () => {
     const a = confirm("Are you sure you want to logout?");
     if (a === false) return;
-    let ans = prompt("enter your username")
-    if(ans === authUser.username){
+    let ans = prompt("enter your password")
+    if(ans === authUser.password){
     const res = await axios.post("http://localhost:3000/api/auth/logout");
     if (res.data.success) {
       setauthUser(null);
